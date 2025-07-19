@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "env": {}
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "env": {}
+    },
+    "kb-mcp": {
+      "command": "npx",
+      "args": ["kb", "serve"],
+      "env": {}
+    },
+    "idd-mcp": {
+      "command": "idd-mcp",
+      "args": ["serve"],
+      "env": {}
+    }
+  }
+}

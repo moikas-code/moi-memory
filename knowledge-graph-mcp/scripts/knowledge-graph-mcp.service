@@ -1,0 +1,46 @@
+[Unit]
+Description=Knowledge Graph MCP Server
+Documentation=https://github.com/yourusername/knowledge-graph-mcp
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+User=mcp
+Group=mcp
+WorkingDirectory=/opt/knowledge-graph-mcp
+
+# Environment configuration
+Environment="RUST_LOG=info"
+EnvironmentFile=-/etc/knowledge-graph-mcp/env
+
+# Pre-start: ensure containers are running
+ExecStartPre=/usr/bin/docker compose up -d neo4j redis
+ExecStartPre=/bin/sleep 10
+
+# Main service
+ExecStart=/usr/local/bin/knowledge-graph-mcp
+
+# Restart policy
+Restart=always
+RestartSec=10
+
+# Resource limits
+LimitNOFILE=65536
+MemoryLimit=2G
+CPUQuota=200%
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/knowledge-graph-mcp
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=knowledge-graph-mcp
+
+[Install]
+WantedBy=multi-user.target

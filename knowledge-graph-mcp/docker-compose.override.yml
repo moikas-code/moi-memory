@@ -1,0 +1,39 @@
+# Development overrides for docker-compose.yml
+# This file is automatically loaded by docker-compose in development
+
+version: '3.8'
+
+services:
+  knowledge-graph-mcp:
+    # For development, mount source code and use cargo watch
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./src:/app/src:ro
+      - ./Cargo.toml:/app/Cargo.toml:ro
+      - ./workspace:/workspace:rw  # Read-write in dev
+      - cargo_cache:/usr/local/cargo/registry
+      - target_cache:/app/target
+    environment:
+      - RUST_LOG=debug
+      - RUST_BACKTRACE=1
+
+  neo4j:
+    # Enable debug logging in development
+    environment:
+      - NEO4J_dbms_logs_debug_level=DEBUG
+    ports:
+      - "7474:7474"  # Neo4j Browser
+      - "7687:7687"  # Bolt protocol
+      - "7473:7473"  # HTTPS
+
+  redis:
+    # Enable verbose logging in development
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru --loglevel debug
+
+volumes:
+  cargo_cache:
+    driver: local
+  target_cache:
+    driver: local

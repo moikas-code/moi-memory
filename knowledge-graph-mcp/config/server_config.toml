@@ -1,0 +1,42 @@
+# Knowledge Graph MCP Server Configuration
+
+[server]
+name = "knowledge-graph-mcp"
+version = "0.1.0"
+log_level = "debug"
+
+[neo4j]
+uri = "neo4j://localhost:7687"
+username = "neo4j"
+password = "knowledge-graph-2024"
+database = "neo4j"
+max_connections = 10
+connection_timeout = 30
+
+[redis]
+uri = "redis://127.0.0.1:6379"
+max_connections = 10
+connection_timeout = 10
+
+[cache]
+default_ttl = 3600  # 1 hour
+query_cache_ttl = 1800  # 30 minutes
+session_ttl = 86400  # 24 hours
+
+[docker]
+neo4j_image = "neo4j:5.15-community"
+redis_image = "redis:7-alpine"
+neo4j_container_name = "knowledge-graph-neo4j"
+redis_container_name = "knowledge-graph-redis"
+auto_start = true
+health_check_retries = 30
+
+[analysis]
+supported_languages = ["rust", "javascript", "typescript", "python"]
+ignored_directories = ["node_modules", "target", ".git", "dist", "build", "__pycache__"]
+max_file_size = 1048576  # 1MB
+batch_size = 100
+
+[monitoring]
+enable_metrics = true
+metrics_port = 9090
